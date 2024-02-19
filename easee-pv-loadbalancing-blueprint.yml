@@ -111,20 +111,6 @@ blueprint:
           min: 0
           max: 25000
       default: 10000
-    itimestart:
-      name: Activate time
-      description: Set the time you want the load balancing to activate. This is important
-        to avoid low charging currents during nighttime.
-      default: 07:00:00
-      selector:
-        time: {}
-    itimeend:
-      name: Deactivate time
-      description: Set the time you want the load balancing to deactivate. This is
-        important to avoid low charging currents during nighttime.
-      default: '22:00:00'
-      selector:
-        time: {}
 trigger:
 - platform: state
   entity_id:
@@ -147,9 +133,9 @@ condition:
       state: awaiting_start
 - condition: template
   value_template: '{{ (states(entChargerDynamicLimit)|int) != valCurrentAvailableForCharging }}'
-- condition: time
-  after: !input 'itimestart'
-  before: !input 'itimeend'
+- condition: sun
+  before: sunset
+  after: sunrise
 action:
 - choose:
     - conditions:
