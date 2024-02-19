@@ -100,6 +100,18 @@ blueprint:
           unit_of_measurement: '%'
           mode: slider
       default: 70
+    ipercentageforcar:
+      name: 'Use percentage of available energy for car:'
+      description: Only use the specified energy percentage for the car if the homebattery
+        is below boosting SoC.
+      selector:
+        number:
+          min: 0.0
+          max: 100.0
+          step: 1.0
+          unit_of_measurement: '%'
+          mode: slider
+      default: 70
     ibatteryboostpower:
       name: Maximum homebattery discharge capacity
       description: Set your home battery maximum discharge power.
@@ -167,6 +179,7 @@ variables:
   entExternalVoltageL3: !input 'iexternalvoltagel3'
   entChargerStatus: !input 'ichargerstatus'
   entChargerEnabled: !input 'ichargerenabled'
+  entPercentageForCar: !input 'ipercentageforcar'
   valExternalVoltage: '
     {% if state_attr(entChargerStatus, ''config_phaseMode'') == 1 %}
       {{ states(entExternalVoltageL1)|float }}
@@ -176,8 +189,12 @@ variables:
   valCurrentAvailableForCharging: '
     {% set powerAvailable = (states(entSolarPower)|float - states(entConsumptionPower)|float + (states(entChargingPower)|float * 1000))|int %}
 
-    {% if states(entBatterySOC)|float >= entBatteryMinSoC|float %}
+    {% if states(entBatterySOC)|float > entBatteryMinSoC|float %}
       {% set powerAvailable = powerAvailable + entBatteryBoostPower|float %}
+    {% endif %}
+
+    {% if states(entBatterySOC)|float < entBatteryMinSoC|float %}
+      {% set powerAvailable = powerAvailable * entPercentageForCar|float / 100 %}
     {% endif %}
 
     {% set EaseeAvailableCurrent = (powerAvailable / valExternalVoltage) | float %}
