@@ -81,6 +81,13 @@ blueprint:
         entity:
           domain: sensor
           multiple: false
+    ichargerenabled:
+      name: Easee Charger Enabled sensor
+      description: 'By default: sensor.<your easee name>_charger_enabled'
+      selector:
+        entity:
+          domain: switch
+          multiple: false
     iminbatterylevel:
       name: 'Boost charging with homebattery if SoC is above:'
       description: Boost charging with home battery power if home battery SoC is above
@@ -127,6 +134,9 @@ condition:
 - condition: or
   conditions:
     - condition: state
+      entity_id: !input 'ichargerenabled'
+      state: 'on'
+    - condition: state
       entity_id: !input 'ichargerstatus'
       state: charging
     - condition: state
@@ -170,6 +180,7 @@ variables:
   entExternalVoltageL2: !input 'iexternalvoltagel2'
   entExternalVoltageL3: !input 'iexternalvoltagel3'
   entChargerStatus: !input 'ichargerstatus'
+  entChargerEnabled: !input 'ichargerenabled'
   valExternalVoltage: '
     {% if state_attr(entChargerStatus, ''config_phaseMode'') == 1 %}
       {{ states(entExternalVoltageL1)|float }}
