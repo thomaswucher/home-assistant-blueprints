@@ -129,20 +129,22 @@ trigger:
   - !input 'isolarpower'
   - !input 'iconsumptionpower'
 condition:
-- condition: or
+- condition: and
   conditions:
     - condition: state
       entity_id: !input 'ichargerenabled'
       state: 'on'
-    - condition: state
-      entity_id: !input 'ichargerstatus'
-      state: charging
-    - condition: state
-      entity_id: !input 'ichargerstatus'
-      state: ready_to_charge
-    - condition: state
-      entity_id: !input 'ichargerstatus'
-      state: awaiting_start
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: !input 'ichargerstatus'
+          state: charging
+        - condition: state
+          entity_id: !input 'ichargerstatus'
+          state: ready_to_charge
+        - condition: state
+          entity_id: !input 'ichargerstatus'
+          state: awaiting_start
 - condition: template
   value_template: '{{ (states(entChargerDynamicLimit)|int) != valCurrentAvailableForCharging }}'
 - condition: sun
