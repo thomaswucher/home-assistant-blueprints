@@ -154,7 +154,7 @@ action:
 - choose:
     - conditions:
         - condition: template
-          value_template: "{{ valCurrentAvailableForCharging >= 6 }}"
+          value_template: "{{ valCurrentAvailableForCharging >= 7 }}"
       sequence:
         - service: easee.set_charger_dynamic_limit
           data:
@@ -162,7 +162,7 @@ action:
             current: '{{ valCurrentAvailableForCharging }}'
     - conditions:
         - condition: template
-          value_template: "{{ valCurrentAvailableForCharging < 6 }}"
+          value_template: "{{ valCurrentAvailableForCharging < 7 }}"
       sequence:
         - service: easee.action_command
           data:
