@@ -206,5 +206,5 @@ variables:
     {% endif %}
 
     {{ EaseeAvailableCurrent|int }}'
-mode: restart
+mode: single
 max_exceeded: silent
