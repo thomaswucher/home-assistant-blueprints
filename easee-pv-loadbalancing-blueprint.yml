@@ -168,6 +168,7 @@ action:
           data:
             charger_id: '{{ state_attr(entChargerStatus,''id'') }}'
             action_command: pause
+- delay: 120
 variables:
   entChargerDynamicLimit: !input 'ichargerdynamiclimit'
   entSolarPower: !input 'isolarpower'
