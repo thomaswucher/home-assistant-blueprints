@@ -147,9 +147,6 @@ condition:
           state: awaiting_start
 - condition: template
   value_template: '{{ (states(entChargerDynamicLimit)|int) != valCurrentAvailableForCharging }}'
-- condition: sun
-  before: sunset
-  after: sunrise
 action:
 - choose:
     - conditions:
