@@ -88,6 +88,13 @@ blueprint:
         entity:
           domain: switch
           multiple: false
+    ichargeralwayssupplyminimum:
+      name: Easee Charger should always charge at 7A
+      description: 'By default: sensor.<your custom switch>'
+      selector:
+        entity:
+          domain: boolean
+          multiple: false
     iminbatterylevel:
       name: 'Boost charging with homebattery if SoC is above:'
       description: Boost charging with home battery power if home battery SoC is above
@@ -159,12 +166,20 @@ action:
             current: '{{ valCurrentAvailableForCharging }}'
     - conditions:
         - condition: template
-          value_template: "{{ valCurrentAvailableForCharging < 7 }}"
+          value_template: "{{ valCurrentAvailableForCharging < 7 and not entChargerAlwaysSupplyMinimum }}"
       sequence:
         - service: easee.action_command
           data:
             charger_id: '{{ state_attr(entChargerStatus,''id'') }}'
             action_command: pause
+    - conditions:
+        - condition: template
+          value_template: "{{ valCurrentAvailableForCharging < 7 and entChargerAlwaysSupplyMinimum }}"
+      sequence:
+        - service: easee.set_charger_dynamic_limit
+          data:
+            charger_id: '{{ state_attr(entChargerStatus,''id'') }}'
+            current: '7'
 - delay: 120
 variables:
   entChargerDynamicLimit: !input 'ichargerdynamiclimit'
@@ -179,6 +194,7 @@ variables:
   entExternalVoltageL3: !input 'iexternalvoltagel3'
   entChargerStatus: !input 'ichargerstatus'
   entChargerEnabled: !input 'ichargerenabled'
+  entChargerAlwaysSupplyMinimum: !input 'ichargeralwayssupplyminimum'
   entPercentageForCar: !input 'ipercentageforcar'
   valExternalVoltage: '
     {% if state_attr(entChargerStatus, ''config_phaseMode'') == 1 %}
