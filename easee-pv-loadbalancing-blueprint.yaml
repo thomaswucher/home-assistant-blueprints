@@ -126,17 +126,6 @@ blueprint:
           min: 0
           max: 25000
       default: 10000
-    iinvertermaxpower:
-      name: Maximum inverter power
-      description: Set max AC inverter power from solar + battery
-      selector:
-        number:
-          unit_of_measurement: W
-          mode: box
-          step: 100
-          min: 0
-          max: 25000
-      default: 10000
 trigger:
 - platform: state
   entity_id:
@@ -203,7 +192,6 @@ variables:
   entChargerEnabled: !input 'ichargerenabled'
   entChargerAlwaysSupplyMinimum: !input 'ichargeralwayssupplyminimum'
   entPercentageForCar: !input 'ipercentageforcar'
-  entInverterMaxPower: !input 'iinvertermaxpower'
   valExternalVoltage: '
     {% if state_attr(entChargerStatus, ''config_phaseMode'') == 1 %}
       {{ states(entExternalVoltageL1)|float }}
@@ -221,12 +209,6 @@ variables:
 
     {% if states(entBatterySOC)|float < states(entBatteryMinSoC)|float %}
       {% set powerAvailable = powerAvailable * entPercentageForCar|float / 100 %}
-    {% endif %}
-
-    {% set powerAvailableInverter = entInverterMaxPower|float - states(entConsumptionPower)|float + states(entChargingPower)|float * 1000 %}
-    
-    {% if powerAvailable > powerAvailableInverter %}
-      {% set powerAvailable = powerAvailableInverter %}
     {% endif %}
     
     {% set EaseeAvailableCurrent = (powerAvailable / valExternalVoltage) | float %}
