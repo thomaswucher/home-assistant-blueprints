@@ -153,12 +153,12 @@ condition:
           entity_id: !input 'ichargerstatus'
           state: awaiting_start
 - condition: template
-  value_template: '{{ (states(entChargerDynamicLimit)|int) != valCurrentAvailableForCharging }}'
+  value_template: '{{ (states(entChargerDynamicLimit)|int) != valCurrentAvailableForCharging|int }}'
 action:
 - choose:
     - conditions:
         - condition: template
-          value_template: "{{ valCurrentAvailableForCharging >= 7 }}"
+          value_template: "{{ valCurrentAvailableForCharging|int >= 7 }}"
       sequence:
         - service: easee.set_charger_dynamic_limit
           data:
@@ -166,7 +166,7 @@ action:
             current: '{{ valCurrentAvailableForCharging }}'
     - conditions:
         - condition: template
-          value_template: "{{ valCurrentAvailableForCharging < 7 and not entChargerAlwaysSupplyMinimum }}"
+          value_template: "{{ valCurrentAvailableForCharging|int < 7 and not entChargerAlwaysSupplyMinimum|bool }}"
       sequence:
         - service: easee.action_command
           data:
@@ -174,7 +174,7 @@ action:
             action_command: pause
     - conditions:
         - condition: template
-          value_template: "{{ valCurrentAvailableForCharging < 7 and entChargerAlwaysSupplyMinimum }}"
+          value_template: "{{ valCurrentAvailableForCharging|int < 7 and entChargerAlwaysSupplyMinimum|bool }}"
       sequence:
         - service: easee.set_charger_dynamic_limit
           data:
