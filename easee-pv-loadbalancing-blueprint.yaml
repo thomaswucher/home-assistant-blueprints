@@ -100,13 +100,9 @@ blueprint:
       description: Boost charging with home battery power if home battery SoC is above
         this limit.
       selector:
-        number:
-          min: 0.0
-          max: 100.0
-          step: 1.0
-          unit_of_measurement: '%'
-          mode: slider
-      default: 70
+        entity:
+          domain: input_number
+          multiple: false
     ipercentageforcar:
       name: 'Use percentage of available energy for car:'
       description: Only use the specified energy percentage for the car if the homebattery
@@ -217,13 +213,13 @@ variables:
   valCurrentAvailableForCharging: '
     {% set powerAvailable = (states(entSolarPower)|float - states(entConsumptionPower)|float + (states(entChargingPower)|float * 1000))|int %}
 
-    {% if states(entBatterySOC)|float > entBatteryMinSoC|float + 1 %}
+    {% if states(entBatterySOC)|float > states(entBatteryMinSoC)|float + 1 %}
       {% set powerAvailable = powerAvailable + entBatteryBoostPower|float %}
-    {% elif states(entBatterySOC)|float > entBatteryMinSoC|float %}
+    {% elif states(entBatterySOC)|float > states(entBatteryMinSoC)|float %}
       {% set powerAvailable = powerAvailable + 500 %}
     {% endif %}
 
-    {% if states(entBatterySOC)|float < entBatteryMinSoC|float %}
+    {% if states(entBatterySOC)|float < states(entBatteryMinSoC)|float %}
       {% set powerAvailable = powerAvailable * entPercentageForCar|float / 100 %}
     {% endif %}
 
