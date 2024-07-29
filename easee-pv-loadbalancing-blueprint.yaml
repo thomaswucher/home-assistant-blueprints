@@ -223,7 +223,7 @@ variables:
       {% set powerAvailable = powerAvailable * entPercentageForCar|float / 100 %}
     {% endif %}
 
-    {% set powerAvailableInverter = entInverterMaxPower|float - states(entConsumptionPower)|float %}
+    {% set powerAvailableInverter = entInverterMaxPower|float - states(entConsumptionPower)|float + states(entChargingPower)|float * 1000 %}
     
     {% if powerAvailable > powerAvailableInverter %}
       {% set powerAvailable = powerAvailableInverter %}
