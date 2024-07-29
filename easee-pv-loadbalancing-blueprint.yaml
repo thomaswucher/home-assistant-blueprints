@@ -83,17 +83,17 @@ blueprint:
           multiple: false
     ichargerenabled:
       name: Easee Charger Enabled sensor
-      description: 'By default: sensor.<your easee name>_charger_enabled'
+      description: 'By default: input_boolean.<your easee name>_charger_enabled'
       selector:
         entity:
-          domain: switch
+          domain: input_boolean
           multiple: false
     ichargeralwayssupplyminimum:
       name: Easee Charger should always charge at 7A
-      description: 'By default: sensor.<your custom switch>'
+      description: 'By default: input_boolean.<your custom switch>'
       selector:
         entity:
-          domain: switch
+          domain: input_boolean
           multiple: false
     iminbatterylevel:
       name: 'Boost charging with homebattery if SoC is above:'
