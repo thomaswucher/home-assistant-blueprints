@@ -93,7 +93,7 @@ blueprint:
       description: 'By default: sensor.<your custom switch>'
       selector:
         entity:
-          domain: boolean
+          domain: switch
           multiple: false
     iminbatterylevel:
       name: 'Boost charging with homebattery if SoC is above:'
