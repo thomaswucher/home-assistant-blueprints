@@ -207,9 +207,9 @@ variables:
     {% elif battery_plus == 3 %}
       {% set powerAvailable = powerAvailable + 1800 %}
     {% elif battery_plus == 2 %}
-      {% set powerAvailable = powerAvailable + 1000 %}
+      {% set powerAvailable = powerAvailable + 800 %}
     {% elif battery_plus == 1 %}
-      {% set powerAvailable = powerAvailable + 500 %}
+      {% set powerAvailable = powerAvailable + 250 %}
     {% endif %}
 
     {% if battery_plus < 0 %}
