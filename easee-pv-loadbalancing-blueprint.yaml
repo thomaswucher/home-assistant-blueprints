@@ -201,10 +201,12 @@ variables:
   valCurrentAvailableForCharging: '
     {% set powerAvailable = (states(entSolarPower)|float - states(entConsumptionPower)|float + (states(entChargingPower)|float * 1000))|int %}
 
-    {% if states(entBatterySOC)|float > states(entBatteryMinSoC)|float + 1 %}
+    {% if states(entBatterySOC)|float > states(entBatteryMinSoC)|float + 2 %}
       {% set powerAvailable = powerAvailable + entBatteryBoostPower|float %}
-    {% elif states(entBatterySOC)|float > states(entBatteryMinSoC)|float %}
+    {% elif states(entBatterySOC)|float > states(entBatteryMinSoC)|float + 1 %}
       {% set powerAvailable = powerAvailable + 500 %}
+    {% elif states(entBatterySOC)|float > states(entBatteryMinSoC)|float %}
+      {% set powerAvailable = powerAvailable + 250 %}
     {% endif %}
 
     {% if states(entBatterySOC)|float < states(entBatteryMinSoC)|float %}
