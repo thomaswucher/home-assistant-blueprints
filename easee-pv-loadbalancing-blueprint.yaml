@@ -172,7 +172,7 @@ action:
         - condition: template
           value_template: "{{ valCurrentAvailableForCharging|int < 7 and states(entChargerAlwaysSupplyMinimum)|bool }}"
       sequence:
-        - service: easee.set_charger_dynamic_limit
+        - action: easee.set_charger_dynamic_limit
           data:
             charger_id: '{{ state_attr(entChargerStatus,''id'') }}'
             current: '7'
